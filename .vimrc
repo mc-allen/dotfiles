@@ -101,15 +101,6 @@ augroup NO_CURSOR_MOVE_ON_FOCUS
    au FocusGained * if exists('g:oldmouse') | let &mouse=g:oldmouse | unlet g:oldmouse | endif
 augroup END
 
-" ash color config
-augroup syntax_hacks
-   au!
-   au FileType diff syn match DiffComment "^#.*"
-   au FileType diff syn match DiffCommentIgnore "^###.*"
-   au FileType diff call g:ApplySyntaxForDiffComments()
-augroup end
-
-
 fun! g:ApplySyntaxForDiffComments()
    if &background == 'light'
       hi DiffCommentIgnore ctermfg=249 ctermbg=none

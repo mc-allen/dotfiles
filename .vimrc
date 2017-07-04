@@ -12,7 +12,7 @@ Bundle 'Valloric/YouCompleteMe'
 Bundle 'kien/ctrlp.vim'
 Bundle 'nanotech/jellybeans.vim'
 Bundle 'xolox/vim-misc'
-Bundle 'bling/vim-airline'
+"Bundle 'bling/vim-airline'
 Bundle 'scrooloose/nerdtree'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'vim-scripts/scons.vim'
@@ -23,6 +23,7 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'stephpy/vim-yaml'
 Bundle 'ingydotnet/yaml-vim'
+Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -71,6 +72,7 @@ set undolevels=1000             " use many muchos levels of undo
 set visualbell                  " don't beep
 set noerrorbells                " don't beep
 set cursorline                  " underline the current line, for quick orientation
+set modeline
 
 " enable xterm colors
 set term=xterm-256color
@@ -128,7 +130,7 @@ let g:ctrlp_custom_ignore = {
   \ }
 let g:ctrlp_working_path_mode = 'r'
 "let g:ctrlp_by_filename = 1
-let g:ctrlp_root_markers = ['.arkyd_root']
+let g:ctrlp_root_markers = ['.arkyd_root', '.arkyd_ops_root']
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_max_files = 0
 

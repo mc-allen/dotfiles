@@ -12,7 +12,6 @@ Bundle 'Valloric/YouCompleteMe'
 Bundle 'kien/ctrlp.vim'
 Bundle 'nanotech/jellybeans.vim'
 Bundle 'xolox/vim-misc'
-"Bundle 'bling/vim-airline'
 Bundle 'scrooloose/nerdtree'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'vim-scripts/scons.vim'
@@ -125,12 +124,10 @@ let mapleader = ","
 " Filter out binary files
 set wildignore+=*.o,*.obj,*.os,*.lo,*.Plo,.*.pyc,*.gdca,*.gcno,git,depend.*,*.built,CMakeFiles
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|depend.*|*.built|CMakeFiles|bsp_zynq-linux-cortexa9|working)$',
+  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|depend.*|*.built|CMakeFiles)$',
   \ 'file': '\v(\.(exe|a|so|dll|o|os|lo|Plo|obj|pyc|gcno|html).*$)|(.*_main$)',
   \ }
 let g:ctrlp_working_path_mode = 'r'
-"let g:ctrlp_by_filename = 1
-let g:ctrlp_root_markers = ['.arkyd_root', '.arkyd_ops_root']
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_max_files = 0
 

@@ -137,6 +137,7 @@ let g:ctrlp_max_files = 0
 " Toggle whitespace with ,w
 set listchars=tab:>-,trail:?,eol:$
 nmap <silent> <leader>w :set nolist!<CR>
+nmap <silent> <leader>W :set diffopt+=iwhite<CR>
 
 " Toggle line numbers with ,n
 nmap <silent> <leader>n :set nornu!<CR>

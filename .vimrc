@@ -6,6 +6,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
+Bundle 'google/vim-maktaba'
 Bundle 'majutsushi/tagbar'
 Bundle 'ervandew/supertab'
 Bundle 'Valloric/YouCompleteMe'
@@ -24,7 +25,7 @@ Bundle 'stephpy/vim-yaml'
 Bundle 'ingydotnet/yaml-vim'
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 Bundle 'suan/vim-instant-markdown'
-Bundle 'bazelbuild/vim-bazelon'
+Bundle 'bazelbuild/vim-bazel'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required

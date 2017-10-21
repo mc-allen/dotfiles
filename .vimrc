@@ -23,6 +23,8 @@ Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'stephpy/vim-yaml'
 Bundle 'ingydotnet/yaml-vim'
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
+Bundle 'suan/vim-instant-markdown'
+Bundle 'bazelbuild/vim-bazelon'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -33,12 +35,14 @@ filetype plugin on
 filetype indent on
 
 " Spell checking
-"set spell spelllang=en_us
+set spell spelllang=en_us
+au BufRead,BufNewFile *.md setlocal spell
+au BufRead,BufNewFile *.markdown setlocal spell
 
-" Tab key configuration (use 3 spaces)
-set tabstop=3
-set shiftwidth=3
-set softtabstop=3
+" Tab key configuration (use 2 spaces)
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set expandtab       " Use spaces instead of tabs
 set autoindent
 set copyindent

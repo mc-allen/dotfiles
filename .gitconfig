@@ -1,6 +1,5 @@
-[user]
-   name = Marc Allen
-   email = allen.marc@gmail.com
+[include]
+  path = ~/.gitconfig.local
 [core]
 	editor = vim
 [diff]

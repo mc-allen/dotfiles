@@ -22,7 +22,6 @@ Bundle 'sjl/splice.vim'
 Bundle 'tpope/vim-fugitive'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'stephpy/vim-yaml'
-Bundle 'ingydotnet/yaml-vim'
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 Bundle 'suan/vim-instant-markdown'
 Bundle 'bazelbuild/vim-bazel'
@@ -34,6 +33,12 @@ syntax on
 filetype on
 filetype plugin on
 filetype indent on
+
+" scons syntax
+au BufNewFile,BufRead,BufReadPost sconstruct set syntax=scons
+au BufNewFile,BufRead,BufReadPost sconscript set syntax=scons
+au BufNewFile,BufRead,BufReadPost SConstruct set syntax=scons
+au BufNewFile,BufRead,BufReadPost SConscript set syntax=scons
 
 " Spell checking
 set spell spelllang=en_us
@@ -179,20 +184,12 @@ nmap <F8> :TagbarToggle<CR>
 
 " Auto-complete
 let g:ycm_confirm_extra_conf = 0
-let g:ycm_min_num_of_chars_for_completion = 2
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_add_preview_to_completeopt = 0
-let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1, 'python': 1, 'bash': 1 }
-set completeopt-=preview
+let g:ycm_show_diagnostics_ui = 1
 nnoremap <leader>d :YcmCompleter GoTo<CR>
 "" turn off YCM
 nnoremap <leader>y :let g:ycm_auto_trigger=0<CR>
 "" turn on YCM
 nnoremap <leader>Y :let g:ycm_auto_trigger=1<CR>
-
-let g:ycm_server_use_vim_stdout = 1
-let g:ycm_server_log_level = 'debug'
 
 " Gitgutter
 let g:gitgutter_enabled = 1

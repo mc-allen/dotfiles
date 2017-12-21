@@ -56,6 +56,10 @@ if [ -r "$HOME/.rvm/bin" ]; then
   export PATH="$PATH:$HOME/.rvm/bin"
 fi
 
+if [ -r $SPACK_INSTALL_PATH ]; then
+  source $SPACK_INSTALL_PATH/share/spack/setup-env.sh
+fi
+
 if [ -r $HOME/.bashrc.local ]; then
   source $HOME/.bashrc.local
 fi

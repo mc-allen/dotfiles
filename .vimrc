@@ -157,8 +157,8 @@ let NERDTreeIgnore = ['\.pyc$']
 nnoremap <C-S-Left> :bp<cr>
 nnoremap <C-S-Right> :bn<cr>
 
-" Map control-enter to ESC
-inoremap <C-C> <Esc>
+" Map control-bracket to ESC
+inoremap <C-[> <Esc>
 
 " Enable indent guides by default
 let g:indent_guides_enable_on_vim_startup = 1

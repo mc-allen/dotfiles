@@ -33,6 +33,17 @@ call glaive#Install()
 Glaive codefmt plugin[mappings]
 "Glaive codefmt google_java_executable="java -jar /path/to/google-java-format-VERSION-all-deps.jar"
 
+syntax on
+filetype on
+filetype plugin on
+filetype indent on
+
+" scons syntax
+au BufNewFile,BufRead,BufReadPost sconstruct set syntax=scons filetype=scons
+au BufNewFile,BufRead,BufReadPost sconscript set syntax=scons filetype=scons
+au BufNewFile,BufRead,BufReadPost SConstruct set syntax=scons filetype=scons
+au BufNewFile,BufRead,BufReadPost SConscript set syntax=scons filetype=scons
+
 augroup autoformat_settings
   "autocmd FileType bzl AutoFormatBuffer buildifier
   autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
@@ -42,19 +53,9 @@ augroup autoformat_settings
   "autocmd FileType html,css,json AutoFormatBuffer js-beautify
   "autocmd FileType java AutoFormatBuffer google-java-format
   autocmd FileType python AutoFormatBuffer yapf
+  autocmd FileType scons AutoFormatBuffer yapf
   " Alternative: autocmd FileType python AutoFormatBuffer autopep8
 augroup END
-
-syntax on
-filetype on
-filetype plugin on
-filetype indent on
-
-" scons syntax
-au BufNewFile,BufRead,BufReadPost sconstruct set syntax=scons
-au BufNewFile,BufRead,BufReadPost sconscript set syntax=scons
-au BufNewFile,BufRead,BufReadPost SConstruct set syntax=scons
-au BufNewFile,BufRead,BufReadPost SConscript set syntax=scons
 
 " Spell checking
 set spell spelllang=en_us

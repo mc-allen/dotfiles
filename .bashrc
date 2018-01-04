@@ -1,5 +1,7 @@
 # .bashrc
 
+export PYTHONSTARTUP="$HOME/.pyrc"
+
 function encrypt() {
   fname="$1"
   openssl aes-256-cbc -base64 -e -salt -in "$fname" -out "$(basename ${fname%.*})"

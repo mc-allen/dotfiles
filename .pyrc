@@ -1,3 +1,10 @@
-import rlcompleter
-import readline
-readline.parse_and_bind("tab: complete")
+import os
+import sys
+if os.isatty(sys.stdout.fileno()):
+    try:
+        import fancycompleter
+        fancycompleter.interact()
+    except ImportError:
+        pass
+del os
+del sys

@@ -6,28 +6,44 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
-Bundle 'google/vim-maktaba'
+Bundle 'nanotech/jellybeans.vim'
+Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 Bundle 'majutsushi/tagbar'
 Bundle 'ervandew/supertab'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'kien/ctrlp.vim'
-Bundle 'nanotech/jellybeans.vim'
-Bundle 'xolox/vim-misc'
 Bundle 'scrooloose/nerdtree'
+Bundle 'kien/ctrlp.vim'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'vim-scripts/scons.vim'
-Bundle 'Chiel92/vim-autoformat'
 Bundle 'vim-scripts/csv.vim'
-Bundle 'sjl/splice.vim'
-Bundle 'tpope/vim-fugitive'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'stephpy/vim-yaml'
-Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 Bundle 'suan/vim-instant-markdown'
+Bundle 'stephpy/vim-yaml'
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'tpope/vim-fugitive'
+Plugin 'google/vim-maktaba'
+Plugin 'google/vim-glaive'
+Plugin 'google/vim-codefmt'
+Plugin 'google/vim-coverage'
+Bundle 'google/vim-searchindex'
 Bundle 'bazelbuild/vim-bazel'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
+call glaive#Install()
+Glaive codefmt plugin[mappings]
+"Glaive codefmt google_java_executable="java -jar /path/to/google-java-format-VERSION-all-deps.jar"
+
+augroup autoformat_settings
+  "autocmd FileType bzl AutoFormatBuffer buildifier
+  autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
+  "autocmd FileType dart AutoFormatBuffer dartfmt
+  "autocmd FileType go AutoFormatBuffer gofmt
+  "autocmd FileType gn AutoFormatBuffer gn
+  "autocmd FileType html,css,json AutoFormatBuffer js-beautify
+  "autocmd FileType java AutoFormatBuffer google-java-format
+  autocmd FileType python AutoFormatBuffer yapf
+  " Alternative: autocmd FileType python AutoFormatBuffer autopep8
+augroup END
 
 syntax on
 filetype on
@@ -157,8 +173,8 @@ let NERDTreeIgnore = ['\.pyc$']
 nnoremap <C-S-Left> :bp<cr>
 nnoremap <C-S-Right> :bn<cr>
 
-" Map control-bracket to ESC
-inoremap <C-[> <Esc>
+" Map control-backslash to ESC, as ESC is far away on some keyboards
+imap <C-\> <Esc>
 
 " Enable indent guides by default
 let g:indent_guides_enable_on_vim_startup = 1

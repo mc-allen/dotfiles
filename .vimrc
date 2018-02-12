@@ -57,6 +57,8 @@ augroup autoformat_settings
   " Alternative: autocmd FileType python AutoFormatBuffer autopep8
 augroup END
 
+Glaive codefmt clang_format_style=file
+
 " Spell checking
 set spell spelllang=en_us
 au BufRead,BufNewFile *.md setlocal spell

@@ -46,7 +46,7 @@ au BufNewFile,BufRead,BufReadPost SConscript set syntax=scons filetype=scons
 
 augroup autoformat_settings
   "autocmd FileType bzl AutoFormatBuffer buildifier
-  autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
+  autocmd FileType c,cc,cpp,proto,javascript AutoFormatBuffer clang-format
   "autocmd FileType dart AutoFormatBuffer dartfmt
   "autocmd FileType go AutoFormatBuffer gofmt
   "autocmd FileType gn AutoFormatBuffer gn
@@ -224,3 +224,8 @@ let g:formatprg_args_c = "--mode=c --style=\"k&r\" -pcHs3"
 " 80 column
 hi ColorColumn ctermbg=235
 set colorcolumn=80
+
+" Powerline
+set laststatus=2 " Always display the statusline in all windows
+set showtabline=2 " Always display the tabline, even if there is only one tab
+set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)

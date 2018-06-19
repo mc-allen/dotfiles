@@ -46,16 +46,13 @@ alias .........='cd ../../../../../../../..'
 
 alias ll='ls -lah'
 
-# powerline-shell prompt command
-function _update_ps1() {
-  PS1="$(powerline-shell $?)"
-}
-unset PROMPT_COMMAND
-PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-if [ -r "$HOME/.rvm/bin" ]; then
-  export PATH="$PATH:$HOME/.rvm/bin"
+if [ -r "$(which powerline-shell)" ]; then
+  # powerline-shell prompt command
+  function _update_ps1() {
+    PS1="$(powerline-shell $?)"
+  }
+  unset PROMPT_COMMAND
+  PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
 
 if [ -r "$SPACK_INSTALL_PATH" ]; then

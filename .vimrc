@@ -153,11 +153,11 @@ let mapleader = ","
 " Filter out binary files
 set wildignore+=*.o,*.obj,*.os,*.lo,*.Plo,.*.pyc,*.gdca,*.gcno,git,depend.*,*.built,CMakeFiles
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|depend.*|*.built|CMakeFiles)$',
-  \ 'file': '\v(\.(exe|a|so|dll|o|os|lo|Plo|obj|pyc|gcno|html).*$)|(.*_main$)',
+  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|depend\..*|..*\.built|CMakeFiles)$',
+  \ 'file': '\v(\.(exe|a|so|dll|o|os|lo|Plo|obj|pyc|gcno|html)$)',
   \ }
-let g:ctrlp_working_path_mode = 'r'
-let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_max_files = 0
 
 " Toggle whitespace with ,w
@@ -189,7 +189,7 @@ nmap <silent> <Leader>ig <Plug>IndentGuidesToggle
 set pastetoggle=<F3>
 
 " Kill all trailing whitespace if F5 is pressed
-nnoremap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+nnoremap <silent> <F12> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
 " Press F4 to toggle highlighting on/off, and show current value.
 noremap <F4> :set hlsearch! hlsearch?<CR>
@@ -223,7 +223,7 @@ let g:formatprg_args_c = "--mode=c --style=\"k&r\" -pcHs3"
 
 " 80 column
 hi ColorColumn ctermbg=235
-set colorcolumn=80
+set colorcolumn=90
 
 " Powerline
 set laststatus=2 " Always display the statusline in all windows

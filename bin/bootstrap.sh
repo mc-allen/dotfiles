@@ -6,7 +6,27 @@ if [[ ! -r $HOME/dotfiles/.git ]]; then
 fi
 
 default_python_version=$(python -c "import sys; print '{}.{}'.format(sys.version_info.major, sys.version_info.minor)")
-echo "Default python version: $default_python_version: $default_python_site"
+echo "Default python version: $default_python_version"
+
+echo "Installing pip modules"
+pip_modules=(
+  fancycompleter
+  git+git://github.com/powerline/powerline
+  git+git://github.com/b-ryan/powerline-shell
+)
+easy_install --user pip
+for pm in ${pip_modules[@]}; do
+  echo "Installing $pm"
+  pip install --user $pm
+done
+
+echo "Note: fonts must be manually installed on host computer as well."
+echo "See: https://github.com/powerline/fonts"
+git clone https://github.com/powerline/fonts.git --depth=1
+cd fonts
+./install.sh
+cd ..
+rm -rf fonts
 
 # Install .profile
 echo "Checking .profile"
@@ -15,16 +35,18 @@ if [[ ! -r $HOME/.profile ]]; then
 fi
 
 # Install .bash_profile
-confirm=""
-while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-  read -p "Overwrite $HOME/.bash_profile? (y/n) " confirm
-done
-if [[ $confirm == "y" ]]; then
-  echo "Overwriting $HOME/.bash_profile"
-  rm -f $HOME/.bash_profile
-  pushd $HOME > /dev/null
-  ln -s $HOME/dotfiles/.bash_profile
-  popd > /dev/null
+if [[ ! "$HOME/.bashrc" -ef "$HOME/dotfiles/.bashrc" ]]; then
+  confirm=""
+  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
+    read -p "Overwrite $HOME/.bash_profile? (y/n) " confirm
+  done
+  if [[ $confirm == "y" ]]; then
+    echo "Overwriting $HOME/.bash_profile"
+    pushd $HOME > /dev/null
+    rm -f .bash_profile
+    ln -s dotfiles/.bash_profile
+    popd > /dev/null
+  fi
 fi
 
 echo "Checking PATH"
@@ -111,25 +133,14 @@ if [[ ! "$HOME/.bashrc" -ef "$HOME/dotfiles/.bashrc" ]]; then
   done
 
   if [[ $confirm == "y" ]]; then
-    rm -f $HOME/.bashrc
     pushd $HOME > /dev/null
-    ln -s $HOME/dotfiles/.bashrc
+    rm -f .bashrc
+    ln -s dotfiles/.bashrc
     popd > /dev/null
   fi
 fi
 
-# Set up powerline
-echo "Checking for powerline"
-if [[ ! $(grep POWERLINE_CONF $HOME/.bashrc.local) ]]; then
-  echo "Adding POWERLINE_CONFIG to $HOME/.bashrc.local"
-  pushd $HOME > /dev/null
-  powerline_path="$(find .local/lib/python$default_python_version/site-packages -name powerline.conf)"
-  echo "POWERLINE_CONF=\"$powerline_path\"" >> $HOME/.bashrc.local
-  popd > /dev/null
-fi
-
 # Set up vim
-
 echo "Creating .vim/tmp"
 mkdir -p $HOME/.vim/tmp
 
@@ -140,18 +151,20 @@ if [[ ! -r $HOME/.vim/bundle/Vundle.vim ]]; then
 fi
 
 echo "Checking for .vimrc"
-if [[ ! -r $HOME/.vimrc ]]; then
+if [[ ! "$HOME/.vimrc" -ef "$HOME/dotfiles/.vimrc" ]]; then
   echo "Linking .vimrc"
   pushd $HOME > /dev/null
-  ln -s $HOME/dotfiles/.vimrc
+  rm -f .vimrc
+  ln -s dotfiles/.vimrc
   popd > /dev/null
 fi
 
 echo "Checking for tab-multi-diff.vim plugin"
-if [[ ! -r $HOME/dotfiles/.vim/plugin/tab-multi-diff.vim ]]; then
+if [[ ! "$HOME/.vim/plugin/tab-multi-diff.vim" -ef "$HOME/dotfiles/.vim/plugin/tab-multi-diff.vim" ]]; then
   echo "Linking tab-multi-diff.vim plugin"
-  pushd $HOME/.vimrc/plugin > /dev/null
-  ln -s $HOME/dotfiles/.vim/plugin/tab-multi-diff.vim
+  pushd $HOME/.vim/plugin > /dev/null
+  rm -f tab-multi-diff.vim
+  ln -s ../../dotfiles/.vim/plugin/tab-multi-diff.vim
   popd > /dev/null
 fi
 
@@ -159,47 +172,42 @@ echo "Installing vim plugins"
 vim +PluginUpdate +PluginInstall +qall
 
 echo "Checking for git-multidiff"
-if [[ ! -r $HOME/.local/bin/git-multidiff ]]; then
+if [[ ! "$HOME/.local/bin/git-multidiff" -ef "$HOME/dotfiles/bin/git-multidiff" ]]; then
   echo "Linking git-multidiff"
   pushd $HOME/.local/bin > /dev/null
-  ln -s $HOME/dotfiles/git-multidiff
+  rm -f git-multidiff
+  ln -s ../../dotfiles/bin/git-multidiff
   popd > /dev/null
 fi
 
 echo "Checking for _git-multidiff-helper"
-if [[ ! -r $HOME/.local/bin/_git-multidiff-helper ]]; then
+if [[ ! "$HOME/.local/bin/_git-multidiff-helper" -ef "$HOME/dotfiles/bin/_git-multidiff-helper" ]]; then
   echo "Linking _git-multidiff-helper"
   pushd $HOME/.local/bin > /dev/null
-  ln -s $HOME/dotfiles/_git-multidiff-helper
+  rm -f _git-multidiff-helper
+  ln -s ../../dotfiles/bin/_git-multidiff-helper
   popd > /dev/null
 fi
 
 if [[ -r "$HOME/.vim/bundle/YouCompleteMe/install.py" ]]; then
-  echo "Installing YouCompleteMe"
-  $HOME/.vim/bundle/YouCompleteMe/install.py
+  confirm=""
+  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
+    read -p "Install YouCompleteMe? (y/n) " confirm
+  done
+
+  if [[ $confirm == "y" ]]; then
+    echo "Installing YouCompleteMe"
+    $HOME/.vim/bundle/YouCompleteMe/install.py
+  fi
 fi
 
 echo "Checking for .gitconfig"
-if [[ ! -r $HOME/.gitconfig ]]; then
+if [[ ! "$HOME/.gitconfig" -ef "$HOME/dotfiles/.gitconfig" ]]; then
   echo "Linking .gitconfig"
   pushd $HOME > /dev/null
-  ln -s $HOME/dotfiles/.gitconfig
+  rm -f .gitconfig
+  ln -s dotfiles/.gitconfig
   popd > /dev/null
-fi
-
-if [[ ! $(grep ".gitconfig.local" $HOME/.gitconfig) ]]; then
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Add .gitconfig.local to .gitconfig? (y/n) " confirm
-  done
-  if [[ $confirm == "y" ]]; then
-    contents=$(cat <<-EOF
-[include]
-  path = ~/.gitconfig.local
-EOF
-)
-    echo "$contents" >> $HOME/.gitconfig
-  fi
 fi
 
 echo "Checking for .gitconfig.local"
@@ -216,20 +224,13 @@ EOF
   echo "$contents" > $HOME/.gitconfig.local
 fi
 
-echo "Installing pip modules"
-pip_modules=( fancycompleter git+git://github.com/powerline/powerline git+git://github.com/b-ryan/powerline-shell )
-easy_install --user pip
-for pm in ${pip_modules[@]}; do
-  echo "Installing $pm"
-  pip install --user $pm
-done
-
-echo "Note: fonts must be manually installed on host computer as well."
-echo "See: https://github.com/powerline/fonts"
-git clone https://github.com/powerline/fonts.git --depth=1
-cd fonts
-./install.sh
-cd ..
-rm -rf fonts
+echo "Checking for .tmux.conf"
+if [[ ! "$HOME/.tmux.conf" -ef "$HOME/dotfiles/.tmux.conf" ]]; then
+  echo "Linking .tmux.conf"
+  pushd $HOME > /dev/null
+  rm -f .tmux.conf
+  ln -s dotfiles/.tmux.conf
+  popd > /dev/null
+fi
 
 exit 0

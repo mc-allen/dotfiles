@@ -16,17 +16,25 @@ pip_modules=(
 )
 easy_install --user pip
 for pm in ${pip_modules[@]}; do
-  echo "Installing $pm"
-  pip install --user $pm
+  confirm=""
+  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
+    read -p "Install python module $pm? (y/n) " confirm
+  done
+  if [[ $confirm == "y" ]]; then
+    echo "Installing $pm"
+    pip install --user $pm
+  fi
 done
 
 echo "Note: fonts must be manually installed on host computer as well."
 echo "See: https://github.com/powerline/fonts"
-git clone https://github.com/powerline/fonts.git --depth=1
-cd fonts
+fonts_path="/tmp/$USER/fonts"
+mkdir -p "$fonts_path"
+git clone https://github.com/powerline/fonts.git "$fonts_path" --depth=1
+pushd "$fonts_path" > /dev/null
 ./install.sh
-cd ..
-rm -rf fonts
+popd > /dev/null
+rm -rf "/tmp/$USER/fonts"
 
 # Install .profile
 echo "Checking .profile"
@@ -50,6 +58,7 @@ if [[ ! "$HOME/.bashrc" -ef "$HOME/dotfiles/.bashrc" ]]; then
 fi
 
 echo "Checking PATH"
+mkdir -p $HOME/.local/bin
 if [[ ! $PATH =~ "$HOME/.local/bin" ]]; then
   # This is needed for pip and powerline
   echo "Adding $HOME/.local/bin to PATH"
@@ -114,14 +123,21 @@ fi
 # Install .bashrc
 echo "Checking .bashrc.local"
 if [[ ! -r $HOME/.bashrc.local ]]; then
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Move current $HOME/.bashrc to $HOME/.bashrc.local? (y/n) " confirm
-  done
+  if [[ -r $HOME/.bashrc ]]; then
+    confirm=""
+    while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
+      read -p "Move current $HOME/.bashrc to $HOME/.bashrc.local? (y/n) " confirm
+    done
 
-  if [[ $confirm == "y" ]]; then
-    echo "Moving $HOME/.bashrc to $HOME/.bashrc.local"
-    mv $HOME/.bashrc $HOME/.bashrc.local
+    if [[ $confirm == "y" ]]; then
+      echo "Moving $HOME/.bashrc to $HOME/.bashrc.local"
+      mv $HOME/.bashrc $HOME/.bashrc.local
+    fi
+  fi
+  # Check to see if a .bashrc.local was created by the previous check; if not, create it.
+  if [[ ! -r $HOME/.bashrc.local ]]; then
+    echo "Creating empty $HOME/.bashrc.local"
+    touch $HOME/.bashrc.local
   fi
 fi
 
@@ -145,6 +161,7 @@ echo "Creating .vim/tmp"
 mkdir -p $HOME/.vim/tmp
 
 echo "Checking for Vundle"
+mkdir -p $HOME/.vim/bundle
 if [[ ! -r $HOME/.vim/bundle/Vundle.vim ]]; then
   echo "Cloning Vundle"
   git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
@@ -160,6 +177,7 @@ if [[ ! "$HOME/.vimrc" -ef "$HOME/dotfiles/.vimrc" ]]; then
 fi
 
 echo "Checking for tab-multi-diff.vim plugin"
+mkdir -p $HOME/.vim/plugin
 if [[ ! "$HOME/.vim/plugin/tab-multi-diff.vim" -ef "$HOME/dotfiles/.vim/plugin/tab-multi-diff.vim" ]]; then
   echo "Linking tab-multi-diff.vim plugin"
   pushd $HOME/.vim/plugin > /dev/null
@@ -213,8 +231,8 @@ fi
 echo "Checking for .gitconfig.local"
 if [[ ! -r $HOME/.gitconfig.local ]]; then
   echo "Creating .gitconfig.local"
-  read -p "Git username?" git_user
-  read -p "Git email?" git_email
+  read -p "Git username? " git_user
+  read -p "Git email? " git_email
   contents=$(cat <<-EOF
 [user]
   name = $git_user

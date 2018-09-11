@@ -215,7 +215,7 @@ if [[ -r "$HOME/.vim/bundle/YouCompleteMe/install.py" ]]; then
 
   if [[ $confirm == "y" ]]; then
     echo "Installing YouCompleteMe"
-    sudo apt-get install build-essential cmake python-dev python3-dev
+    sudo apt-get install build-essential cmake python-dev python3-dev exuberant-ctags
     $HOME/.vim/bundle/YouCompleteMe/install.py
   fi
 fi

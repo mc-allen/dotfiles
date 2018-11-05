@@ -218,6 +218,13 @@ let g:gitgutter_enabled = 1
 let g:gitgutter_realtime = 1
 nnoremap <leader>gg :GitGutterLineHighlightsToggle<CR>
 
+" Tagbar
+" open tagbar only if you're opening Vim with a supported file/files
+autocmd VimEnter * nested :call tagbar#autoopen(1)
+" open tagbar also if you open a supported file in an already running Vim
+autocmd FileType * nested :call tagbar#autoopen(0)
+let g:tagbar_compact = 1
+
 " Autoformat
 let g:formatprg_args_c = "--mode=c --style=\"k&r\" -pcHs3"
 

@@ -5,8 +5,44 @@ if [[ ! -r $HOME/dotfiles/.git ]]; then
   exit 1
 fi
 
-default_python_version=$(python -c "import sys; print '{}.{}'.format(sys.version_info.major, sys.version_info.minor)")
+echo "Note that this will overwrite the following files, if they exist:"
+echo "  $HOME/.bashrc"
+echo "  $HOME/.bash_profile"
+echo "  $HOME/.gitconfig"
+echo "  $HOME/.pyrc"
+echo "  $HOME/.tmux.conf"
+echo "  $HOME/.vimrc"
+
+while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
+  read -p "Continue? (y/n) " confirm
+done
+if [[ $confirm != "y" ]]; then
+  exit 1
+fi
+
+default_python_version=$(python3 -c "import sys; print('{}.{}'.format(sys.version_info.major, sys.version_info.minor))")
 echo "Default python version: $default_python_version"
+
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+  if [[ ! -x $(which brew) ]]; then
+    echo "brew not found. Please install homebrew."
+    exit 1
+  fi
+  if [[ ! -x $(which pip3) ]]; then
+    echo "pip3 not found. Please install python via homebrew: brew install python3"
+    exit 1
+  fi
+elif [[ "$OSTYPE" =~ ^linux ]]; then
+  echo "Checking for easy_install3"
+  if [[ ! -x $(which easy_install3) ]]; then
+    echo "easy_install3 not found. Please install easy_install3."
+    exit 1
+  fi
+  easy_install3 --user pip
+else
+  echo "$OSTYPE is not darwin or linux."
+  exit 1
+fi
 
 echo "Installing pip modules"
 pip_modules=(
@@ -14,7 +50,7 @@ pip_modules=(
   git+git://github.com/powerline/powerline
   git+git://github.com/b-ryan/powerline-shell
 )
-easy_install --user pip
+
 for pm in ${pip_modules[@]}; do
   confirm=""
   while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
@@ -22,7 +58,7 @@ for pm in ${pip_modules[@]}; do
   done
   if [[ $confirm == "y" ]]; then
     echo "Installing $pm"
-    pip install --user $pm
+    pip3 install --user $pm
   fi
 done
 
@@ -78,7 +114,7 @@ if [[ ! $(grep ".local/bin" $HOME/.profile) ]]; then
   fi
 fi
 
-if [[ $(uname) == "Darwin" ]]; then
+if [[ "$OSTYPE" =~ ^darwin ]]; then
   darwin_python_bin="Library/Python/$default_python_version/bin"
   if [[ ! $PATH =~ "$HOME/$darwin_python_bin" ]]; then
     echo "Adding $HOME/$darwin_python_bin to PATH"
@@ -215,8 +251,12 @@ if [[ -r "$HOME/.vim/bundle/YouCompleteMe/install.py" ]]; then
 
   if [[ $confirm == "y" ]]; then
     echo "Installing YouCompleteMe"
-    sudo apt-get install build-essential cmake python-dev python3-dev exuberant-ctags
-    $HOME/.vim/bundle/YouCompleteMe/install.py
+    if [[ "$OSTYPE" =~ ^darwin ]]; then
+      brew install global --with-ctags
+    elif [[ "$OSTYPE" =~ ^linux ]]; then
+      sudo apt-get install build-essential cmake python-dev python3-dev exuberant-ctags
+    fi
+    $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer
   fi
 fi
 
@@ -251,5 +291,19 @@ if [[ ! "$HOME/.tmux.conf" -ef "$HOME/dotfiles/.tmux.conf" ]]; then
   ln -s dotfiles/.tmux.conf
   popd > /dev/null
 fi
+
+echo "Checking for .pyrc"
+if [[ ! "$HOME/.pyrc" -ef "$HOME/.pyrc" ]]; then
+  echo "Linking .tmux.conf"
+  pushd $HOME > /dev/null
+  rm -f .pyrc
+  ln -s dotfiles/.pyrc
+  popd > /dev/null
+fi
+
+echo "Complete."
+echo "Add .bashrc settings to .bashrc.local"
+echo "Add .gitconfig settings to .gitconfig.local"
+echo "Add .bash_profile/.profile settings to .profile"
 
 exit 0

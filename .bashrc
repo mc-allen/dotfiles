@@ -62,3 +62,5 @@ fi
 if [ -r "$HOME/.bashrc.local" ]; then
   source $HOME/.bashrc.local
 fi
+
+export PATH=$HOME/.toolbox/bin:$PATH

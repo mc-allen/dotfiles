@@ -33,11 +33,6 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
     exit 1
   fi
 elif [[ "$OSTYPE" =~ ^linux ]]; then
-  echo "Checking for easy_install3"
-  if [[ ! -x $(which easy_install3) ]]; then
-    echo "easy_install3 not found. Please install easy_install3 with 'sudo apt-get install python3-setuptools'"
-    exit 1
-  fi
   sudo apt install python3-pip
 else
   echo "$OSTYPE is not darwin or linux."

@@ -247,7 +247,7 @@ if [[ -r "$HOME/.vim/bundle/YouCompleteMe/install.py" ]]; then
   if [[ $confirm == "y" ]]; then
     echo "Installing YouCompleteMe"
     if [[ "$OSTYPE" =~ ^darwin ]]; then
-      brew install global --with-ctags
+      brew install ctags
     elif [[ "$OSTYPE" =~ ^linux ]]; then
       sudo apt-get install build-essential cmake python-dev python3-dev exuberant-ctags
     fi

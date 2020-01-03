@@ -53,12 +53,15 @@ alias ll='ls -lah'
 alias tma='tmux attach'
 
 if [ -r "$(which powerline-shell)" ]; then
-  # powerline-shell prompt command
-  function _update_ps1() {
-    PS1="$(powerline-shell $?)"
-  }
-  unset PROMPT_COMMAND
-  PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+  powerline-shell -h > /dev/null 2>&1 
+  if [ $? -eq 0 ]; then
+    # powerline-shell prompt command
+    function _update_ps1() {
+      PS1="$(powerline-shell $?)"
+    }
+    unset PROMPT_COMMAND
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+  fi
 fi
 
 [ -r "$HOME/.bashrc.local" ] && source $HOME/.bashrc.local

@@ -34,6 +34,10 @@ function f() {
   grep -r "$text" --include="$filefilter" "$searchpath"
 }
 
+function ffmpeg-mp4-transcode() {
+  ffmpeg -i "$1" -pix_fmt yuv420p -c:a copy -movflags +faststart "$2"
+}
+
 alias ll='ls -Glah'
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -46,6 +50,8 @@ alias .........='cd ../../../../../../../..'
 
 alias ll='ls -lah'
 
+alias tma='tmux attach'
+
 if [ -r "$(which powerline-shell)" ]; then
   # powerline-shell prompt command
   function _update_ps1() {
@@ -55,12 +61,9 @@ if [ -r "$(which powerline-shell)" ]; then
   PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
 
-if [ -r "$SPACK_INSTALL_PATH" ]; then
-  source $SPACK_INSTALL_PATH/share/spack/setup-env.sh
-fi
+[ -r "$HOME/.bashrc.local" ] && source $HOME/.bashrc.local
+[ -r "$SPACK_INSTALL_PATH" ] && source $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
-if [ -r "$HOME/.bashrc.local" ]; then
-  source $HOME/.bashrc.local
-fi
-
-export PATH=$HOME/.toolbox/bin:$PATH
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

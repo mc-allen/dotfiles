@@ -1,3 +1,9 @@
+export PYTHONSTARTUP="$HOME/.pyrc"
+export GOPATH="$HOME/.go"
+export NVM_DIR="$HOME/.nvm"
+
+[ -r "$HOME/.profile" ] && source "$HOME/.profile"
+
 # set PATH so it includes user's private bin if it exists
 [ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
 
@@ -13,5 +19,3 @@
 
 # set Go environment
 [ -d "$GOPATH" ] && export PATH="$PATH:$GOPATH/bin"
-
-[ -r "$HOME/.profile" ] && source "$HOME/.profile"

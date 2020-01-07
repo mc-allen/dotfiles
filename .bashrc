@@ -1,8 +1,5 @@
 # .bashrc
 
-export PYTHONSTARTUP="$HOME/.pyrc"
-export GOPATH="$HOME/.go"
-
 function encrypt() {
   fname="$1"
   openssl aes-256-cbc -base64 -e -salt -in "$fname" -out "$(basename ${fname%.*})"
@@ -78,6 +75,5 @@ if [ -x "$(which pyenv)" ]; then
   eval "$(pyenv virtualenv-init -)"
 fi
 
-export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

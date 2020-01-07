@@ -32,8 +32,12 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
     echo "pip3 not found. Please install python via homebrew: brew install python3"
     exit 1
   fi
+  brew install go
 elif [[ "$OSTYPE" =~ ^linux ]]; then
   sudo apt install python3-pip
+  sudo add-apt-repository ppa:longsleep/golang-backports
+  sudo apt-get update
+  sudo apt-get install golang-go
 else
   echo "$OSTYPE is not darwin or linux."
   exit 1
@@ -54,6 +58,22 @@ for pm in ${pip_modules[@]}; do
   if [[ $confirm == "y" ]]; then
     echo "Installing $pm"
     pip3 install --user $pm
+  fi
+done
+
+echo "Installing go modules"
+go_modules=(
+  github.com/justjanne/powerline-go
+)
+
+for gm in ${go_modules[@]}; do
+  confirm=""
+  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
+    read -p "Install go module $gm? (y/n) " confirm
+  done
+  if [[ $confirm == "y" ]]; then
+    echo "Installing $gm"
+     go get -u $gm
   fi
 done
 

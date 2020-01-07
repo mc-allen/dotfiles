@@ -58,7 +58,7 @@ if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
       PS1="$($GOPATH/bin/powerline-go -error $?)"
   }
   PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-elif [ -r "$(which powerline-shell)" ]; then
+elif [ -x "$(which powerline-shell)" ]; then
   powerline-shell -h > /dev/null 2>&1 
   if [ $? -eq 0 ]; then
     # powerline-shell prompt command
@@ -72,6 +72,11 @@ fi
 
 [ -r "$HOME/.bashrc.local" ] && source $HOME/.bashrc.local
 [ -r "$SPACK_INSTALL_PATH" ] && source $SPACK_INSTALL_PATH/share/spack/setup-env.sh
+
+if [ -x "$(which pyenv)" ]; then
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

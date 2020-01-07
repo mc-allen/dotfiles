@@ -7,4 +7,7 @@
 [ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 
 # set PATH so it includes toolbox, if it exists
-[ -d $HOME/.toolbox/bin ] && export PATH=$HOME/.toolbox/bin:$PATH
+[ -d "$HOME/.toolbox/bin" ] && export PATH=$HOME/.toolbox/bin:$PATH
+
+# set Go environment
+[ -d "$GOPATH" ] && export PATH="$PATH:$GOPATH/bin"

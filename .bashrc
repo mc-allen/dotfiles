@@ -1,6 +1,7 @@
 # .bashrc
 
 export PYTHONSTARTUP="$HOME/.pyrc"
+export GOPATH="$HOME/.go"
 
 function encrypt() {
   fname="$1"
@@ -52,7 +53,12 @@ alias ll='ls -lah'
 
 alias tma='tmux attach'
 
-if [ -r "$(which powerline-shell)" ]; then
+if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
+  function _update_ps1() {
+      PS1="$($GOPATH/bin/powerline-go -error $?)"
+  }
+  PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+elif [ -r "$(which powerline-shell)" ]; then
   powerline-shell -h > /dev/null 2>&1 
   if [ $? -eq 0 ]; then
     # powerline-shell prompt command

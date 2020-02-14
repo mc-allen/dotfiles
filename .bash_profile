@@ -13,9 +13,11 @@ export NVM_DIR="$HOME/.nvm"
 # set PATH so it includes toolbox, if it exists
 [ -d "$HOME/.toolbox/bin" ] && export PATH=$HOME/.toolbox/bin:$PATH
 
-# Load pyenv automatically by adding
-# the following to ~/.bashrc:
+# Load pyenv automatically by adding the following to ~/.bashrc:
 [ -d "$HOME/.pyenv/bin" ] && export PATH="$HOME/.pyenv/bin:$PATH"
 
 # set Go environment
 [ -d "$GOPATH" ] && export PATH="$PATH:$GOPATH/bin"
+
+# set up Rust environment
+[ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"

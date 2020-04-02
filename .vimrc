@@ -66,10 +66,10 @@ set spell spelllang=en_us
 au BufRead,BufNewFile *.md setlocal spell
 au BufRead,BufNewFile *.markdown setlocal spell
 
-" Tab key configuration (use 2 spaces)
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
+" Tab key configuration (use 4 spaces)
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 set expandtab       " Use spaces instead of tabs
 set autoindent
 set copyindent
@@ -169,6 +169,10 @@ nmap <silent> <leader>W :set diffopt+=iwhite<CR>
 
 " Toggle line numbers with ,n
 nmap <silent> <leader>n :set nornu!<CR>
+
+" Disable code formatting with ,c
+nmap <silent> <leader>c :NoAutoFormatBuffer<CR>
+nmap <silent> <leader>C :NoAutoFormatBuffer<CR>
 
 " Close buffers with nerdtree easily
 nnoremap <leader>q :bp<cr>:bd #<cr>

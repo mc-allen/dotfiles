@@ -55,25 +55,25 @@ if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
       PS1="$($GOPATH/bin/powerline-go -error $?)"
   }
   PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-elif [ -x "$(which powerline-shell)" ]; then
-  powerline-shell -h > /dev/null 2>&1 
-  if [ $? -eq 0 ]; then
-    # powerline-shell prompt command
-    function _update_ps1() {
-      PS1="$(powerline-shell $?)"
-    }
-    unset PROMPT_COMMAND
-    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-  fi
+#elif [ -x "$(which powerline-shell)" ]; then
+#  powerline-shell -h > /dev/null 2>&1 
+#  if [ $? -eq 0 ]; then
+#    # powerline-shell prompt command
+#    function _update_ps1() {
+#      PS1="$(powerline-shell $?)"
+#    }
+#    unset PROMPT_COMMAND
+#    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+#  fi
 fi
 
 [ -r "$HOME/.bashrc.local" ] && source $HOME/.bashrc.local
 [ -r "$SPACK_INSTALL_PATH" ] && source $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
-if [ -x "$(which pyenv)" ]; then
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
-fi
+#if [ -x "$(which pyenv)" ]; then
+#  eval "$(pyenv init -)"
+#  eval "$(pyenv virtualenv-init -)"
+#fi
 
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

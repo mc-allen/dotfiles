@@ -18,6 +18,3 @@ export NVM_DIR="$HOME/.nvm"
 
 # Set up Go environment
 [ -d "$GOPATH" ] && export PATH="$PATH:$GOPATH/bin"
-
-# Set up Rust environment
-[ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"

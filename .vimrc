@@ -245,3 +245,6 @@ set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusl
 
 " Rust
 let g:rustfmt_autosave = 1
+
+" Vim packages
+ packadd termdebug

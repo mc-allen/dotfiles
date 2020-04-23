@@ -52,23 +52,13 @@ alias tma='tmux attach'
 
 if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
   function _update_ps1() {
-      PS1="$($GOPATH/bin/powerline-go -error $?)"
+      PS1="$($GOPATH/bin/powerline-go -modules='aws,venv,user,ssh,cwd,perms,git,jobs,exit,root' -cwd-max-depth=3 -error $?)"
   }
-  PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-#elif [ -x "$(which powerline-shell)" ]; then
-#  powerline-shell -h > /dev/null 2>&1 
-#  if [ $? -eq 0 ]; then
-#    # powerline-shell prompt command
-#    function _update_ps1() {
-#      PS1="$(powerline-shell $?)"
-#    }
-#    unset PROMPT_COMMAND
-#    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-#  fi
+  PROMPT_COMMAND="_update_ps1"
 fi
 
-[ -r "$HOME/.bashrc.local" ] && source $HOME/.bashrc.local
 [ -r "$SPACK_INSTALL_PATH" ] && source $SPACK_INSTALL_PATH/share/spack/setup-env.sh
+[ -r "$HOME/.bashrc.local" ] && source $HOME/.bashrc.local
 
 #if [ -x "$(which pyenv)" ]; then
 #  eval "$(pyenv init -)"

@@ -1,35 +1,34 @@
 [include]
-  path = ~/.gitconfig.local
+    path = ~/.gitconfig.local
 [core]
 	editor = vim
 [diff]
-   tool = multidiff
-[multidiff]
-   tool = vim -c 'silent call TabMultiDiff()' -f
+	tool = vimdiff
+[difftool]
+    prompt = false
+[difftool "vimdiff"]
+	cmd = vim -f -d -c 'set ro' -c 'wincmd l' -c 'cd "$GIT_PREFIX"' "$LOCAL" "$REMOTE"
 [merge]
-   tool = splice
-[mergetool "splice"]
-   cmd = "vim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
-   trustExitCode = true
-[pager]
-   diff =
+	tool = vimdiff
+[mergetool]
+    prompt = false
 [color]
-   ui = auto
-   diff = auto
+    ui = auto
+    diff = auto
 [branch]
-   autosetuprebase = always
+    autosetuprebase = always
 [push]
-   default = current
+    default = current
 [rerere]
-   enabled = true
+    enabled = true
 [alias]
-  s = status -uno
-  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-  l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --no-merges
-  ls = ls-tree --full-tree -r HEAD
-  edit-mod= "!$EDITOR `git diff --name-only --diff-filter=M`"
-  edit-conf = "!$EDITOR `git diff --name-only --diff-filter=U`"
-  add-conf = "!git add `git diff --name-only --diff-filter=U`"
+    s = status -uno
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --no-merges
+    ls = ls-tree --full-tree -r HEAD
+    edit-mod= "!$EDITOR `git diff --name-only --diff-filter=M`"
+    edit-conf = "!$EDITOR `git diff --name-only --diff-filter=U`"
+    add-conf = "!git add `git diff --name-only --diff-filter=U`"
 [credential]
-  helper = "!aws codecommit credential-helper $@"
-  UseHttpPath = true
+	helper = !aws codecommit credential-helper $@
+	UseHttpPath = true

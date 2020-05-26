@@ -240,24 +240,6 @@ fi
 echo "Installing vim plugins"
 vim +PluginUpdate +PluginInstall +qall
 
-echo "Checking for git-multidiff"
-if [[ ! "$HOME/.local/bin/git-multidiff" -ef "$HOME/dotfiles/bin/git-multidiff" ]]; then
-  echo "Linking git-multidiff"
-  pushd $HOME/.local/bin > /dev/null
-  rm -f git-multidiff
-  ln -s ../../dotfiles/bin/git-multidiff
-  popd > /dev/null
-fi
-
-echo "Checking for _git-multidiff-helper"
-if [[ ! "$HOME/.local/bin/_git-multidiff-helper" -ef "$HOME/dotfiles/bin/_git-multidiff-helper" ]]; then
-  echo "Linking _git-multidiff-helper"
-  pushd $HOME/.local/bin > /dev/null
-  rm -f _git-multidiff-helper
-  ln -s ../../dotfiles/bin/_git-multidiff-helper
-  popd > /dev/null
-fi
-
 if [[ -r "$HOME/.vim/bundle/YouCompleteMe/install.py" ]]; then
   confirm=""
   while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do

@@ -47,8 +47,9 @@ alias ........='cd ../../../../../../..'
 alias .........='cd ../../../../../../../..'
 
 alias ll='ls -lah'
-
 alias tma='tmux attach'
+alias mc='meson compile'
+alias mi='meson install'
 
 if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
   function _update_ps1() {
@@ -57,13 +58,4 @@ if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
   PROMPT_COMMAND="_update_ps1"
 fi
 
-[ -r "$SPACK_INSTALL_PATH" ] && source $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 [ -r "$HOME/.bashrc.local" ] && source $HOME/.bashrc.local
-
-#if [ -x "$(which pyenv)" ]; then
-#  eval "$(pyenv init -)"
-#  eval "$(pyenv virtualenv-init -)"
-#fi
-
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

@@ -13,8 +13,5 @@ export NVM_DIR="$HOME/.nvm"
 # Set PATH so it includes toolbox, if it exists
 [ -d "$HOME/.toolbox/bin" ] && export PATH=$HOME/.toolbox/bin:$PATH
 
-# Load pyenv automatically by adding the following to ~/.bashrc:
-[ -d "$HOME/.pyenv/bin" ] && export PATH="$HOME/.pyenv/bin:$PATH"
-
 # Set up Go environment
 [ -d "$GOPATH" ] && export PATH="$PATH:$GOPATH/bin"

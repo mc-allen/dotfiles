@@ -28,6 +28,7 @@ Plugin 'google/vim-coverage'
 Bundle 'google/vim-searchindex'
 Bundle 'bazelbuild/vim-bazel'
 Plugin 'rust-lang/rust.vim'
+Plugin 'matze/vim-meson'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required

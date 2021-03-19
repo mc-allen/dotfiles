@@ -46,7 +46,7 @@ fi
 echo "Installing pip modules"
 pip_modules=(
   fancycompleter
-  git+git://github.com/powerline/powerline
+  powerline-status
   git+git://github.com/b-ryan/powerline-shell
 )
 
@@ -227,16 +227,6 @@ if [[ ! "$HOME/.vimrc" -ef "$HOME/dotfiles/.vimrc" ]]; then
   popd > /dev/null
 fi
 
-echo "Checking for tab-multi-diff.vim plugin"
-mkdir -p $HOME/.vim/plugin
-if [[ ! "$HOME/.vim/plugin/tab-multi-diff.vim" -ef "$HOME/dotfiles/.vim/plugin/tab-multi-diff.vim" ]]; then
-  echo "Linking tab-multi-diff.vim plugin"
-  pushd $HOME/.vim/plugin > /dev/null
-  rm -f tab-multi-diff.vim
-  ln -s ../../dotfiles/.vim/plugin/tab-multi-diff.vim
-  popd > /dev/null
-fi
-
 echo "Installing vim plugins"
 vim +PluginUpdate +PluginInstall +qall
 
@@ -263,6 +253,15 @@ if [[ ! "$HOME/.gitconfig" -ef "$HOME/dotfiles/.gitconfig" ]]; then
   pushd $HOME > /dev/null
   rm -f .gitconfig
   ln -s dotfiles/.gitconfig
+  popd > /dev/null
+fi
+
+echo "Checking for .gitmessage"
+if [[ ! "$HOME/.gitmessage" -ef "$HOME/dotfiles/.gitmessage" ]]; then
+  echo "Linking .gitmessage"
+  pushd $HOME > /dev/null
+  rm -f .gitmessage
+  ln -s dotfiles/.gitmessage
   popd > /dev/null
 fi
 

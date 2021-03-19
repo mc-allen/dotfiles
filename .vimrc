@@ -36,6 +36,8 @@ call glaive#Install()
 Glaive codefmt plugin[mappings]
 "Glaive codefmt google_java_executable="java -jar /path/to/google-java-format-VERSION-all-deps.jar"
 
+let g:pymcd_powerline='py3'
+
 syntax on
 filetype on
 filetype plugin on

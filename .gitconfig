@@ -1,5 +1,7 @@
 [include]
     path = ~/.gitconfig.local
+[commit]
+  template = ~/.gitmessage
 [core]
 	editor = vim
 [diff]

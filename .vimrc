@@ -158,8 +158,8 @@ let mapleader = ","
 " Filter out binary files
 set wildignore+=*.o,*.obj,*.os,*.lo,*.Plo,.*.pyc,*.gdca,*.gcno,git,depend.*,*.built,CMakeFiles
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|depend\..*|..*\.built|CMakeFiles)$',
-  \ 'file': '\v(\.(exe|a|so|dll|o|os|lo|Plo|obj|pyc|gcno)$)',
+  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|depend\..*|..*\.built|CMakeFiles|mc-.*)$',
+  \ 'file': '\v(\.(exe|a|so|dll|o|os|lo|Plo|obj|pyc|gcno|html)$)',
   \ }
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_clear_cache_on_exit = 1

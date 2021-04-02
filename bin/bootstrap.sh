@@ -73,7 +73,7 @@ for gm in ${go_modules[@]}; do
   done
   if [[ $confirm == "y" ]]; then
     echo "Installing $gm"
-     go get -u $gm
+     GOPROXY=direct go get -u $gm
   fi
 done
 

@@ -50,6 +50,7 @@ alias ll='ls -lah'
 alias tma='tmux attach'
 alias mc='meson compile'
 alias mi='meson install'
+alias gp='git pull --rebase'
 
 if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
   function _update_ps1() {

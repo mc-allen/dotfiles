@@ -29,6 +29,8 @@ Bundle 'google/vim-searchindex'
 Bundle 'bazelbuild/vim-bazel'
 Plugin 'rust-lang/rust.vim'
 Plugin 'matze/vim-meson'
+Plugin 'psf/black'
+Plugin 'DirDiff.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -57,10 +59,15 @@ augroup autoformat_settings
   "autocmd FileType gn AutoFormatBuffer gn
   "autocmd FileType html,css,json AutoFormatBuffer js-beautify
   "autocmd FileType java AutoFormatBuffer google-java-format
-  autocmd FileType python AutoFormatBuffer yapf
-  autocmd FileType scons AutoFormatBuffer yapf
+  "autocmd FileType python AutoFormatBuffer yapf
+  "autocmd FileType scons AutoFormatBuffer yapf
   " Alternative: autocmd FileType python AutoFormatBuffer autopep8
 augroup END
+
+augroup black_on_save
+  autocmd!
+  autocmd BufWritePre *.py Black
+augroup end
 
 Glaive codefmt clang_format_style=file
 

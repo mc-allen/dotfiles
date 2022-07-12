@@ -31,8 +31,5 @@
     edit-mod= "!$EDITOR `git diff --name-only --diff-filter=M`"
     edit-conf = "!$EDITOR `git diff --name-only --diff-filter=U`"
     add-conf = "!git add `git diff --name-only --diff-filter=U`"
-[credential]
-	helper = !aws codecommit credential-helper $@
-	UseHttpPath = true
 [pull]
 	rebase = true

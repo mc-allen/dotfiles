@@ -15,3 +15,4 @@ export NVM_DIR="$HOME/.nvm"
 
 # Set up Go environment
 [ -d "$GOPATH" ] && export PATH="$PATH:$GOPATH/bin"
+. "$HOME/.cargo/env"

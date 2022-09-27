@@ -47,7 +47,7 @@ echo "Installing pip modules"
 pip_modules=(
   fancycompleter
   powerline-status
-  git+git://github.com/b-ryan/powerline-shell
+  powerline-shell
 )
 
 for pm in ${pip_modules[@]}; do
@@ -63,7 +63,7 @@ done
 
 echo "Installing go modules"
 go_modules=(
-  github.com/justjanne/powerline-go
+  github.com/justjanne/powerline-go@latest
 )
 
 for gm in ${go_modules[@]}; do
@@ -73,7 +73,7 @@ for gm in ${go_modules[@]}; do
   done
   if [[ $confirm == "y" ]]; then
     echo "Installing $gm"
-     GOPROXY=direct go get -u $gm
+     GOPROXY=direct go install $gm
   fi
 done
 
@@ -241,7 +241,7 @@ if [[ -r "$HOME/.vim/bundle/YouCompleteMe/install.py" ]]; then
     if [[ "$OSTYPE" =~ ^darwin ]]; then
       brew install ctags
     elif [[ "$OSTYPE" =~ ^linux ]]; then
-      sudo apt-get install build-essential cmake python-dev python3-dev exuberant-ctags
+      sudo apt install build-essential cmake vim-nox python3-dev
     fi
     $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer
   fi

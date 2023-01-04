@@ -20,72 +20,29 @@ if [[ $confirm != "y" ]]; then
   exit 1
 fi
 
-default_python_version=$(python3 -c "import sys; print('{}.{}'.format(sys.version_info.major, sys.version_info.minor))")
-echo "Default python version: $default_python_version"
-
 if [[ "$OSTYPE" =~ ^darwin ]]; then
   if [[ ! -x $(which brew) ]]; then
-    echo "brew not found. Please install homebrew."
-    exit 1
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   fi
   if [[ ! -x $(which pip3) ]]; then
-    echo "pip3 not found. Please install python via homebrew: brew install python3"
-    exit 1
+    brew install pyenv # pyenv
   fi
-  brew install go
+  brew install go # For powerline
+  brew install --cask cmake # For YouCompleteMe
 elif [[ "$OSTYPE" =~ ^linux ]]; then
-  sudo apt install python3-pip
-  sudo add-apt-repository ppa:longsleep/golang-backports
+  if [[ ! -x $(which pyenv) ]]; then
+    curl https://pyenv.run | bash # pyenv
+  fi
+  sudo add-apt-repository ppa:longsleep/golang-backports # go
   sudo apt-get update
-  sudo apt-get install golang-go
+  sudo apt-get install golang-go # go
 else
   echo "$OSTYPE is not darwin or linux."
   exit 1
 fi
 
-echo "Installing pip modules"
-pip_modules=(
-  fancycompleter
-  powerline-status
-  powerline-shell
-)
-
-for pm in ${pip_modules[@]}; do
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Install python module $pm? (y/n) " confirm
-  done
-  if [[ $confirm == "y" ]]; then
-    echo "Installing $pm"
-    pip3 install --user $pm
-  fi
-done
-
-echo "Installing go modules"
-go_modules=(
-  github.com/justjanne/powerline-go@latest
-)
-
-for gm in ${go_modules[@]}; do
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Install go module $gm? (y/n) " confirm
-  done
-  if [[ $confirm == "y" ]]; then
-    echo "Installing $gm"
-     GOPROXY=direct go install $gm
-  fi
-done
-
-echo "Note: fonts must be manually installed on host computer as well."
-echo "See: https://github.com/powerline/fonts"
-fonts_path="/tmp/$USER/fonts"
-mkdir -p "$fonts_path"
-git clone https://github.com/powerline/fonts.git "$fonts_path" --depth=1
-pushd "$fonts_path" > /dev/null
-./install.sh
-popd > /dev/null
-rm -rf "/tmp/$USER/fonts"
+echo "Installing python"
+env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install
 
 # Install .profile
 echo "Checking .profile"
@@ -116,8 +73,6 @@ if [[ ! $PATH =~ "$HOME/.local/bin" ]]; then
   export PATH=$PATH:$HOME/.local/bin
 fi
 
-# Check to see if .profile has this, but it wasn't source for some reason, such as maybe
-# $HOME/.bash_profile didn't reference it
 if [[ ! $(grep ".local/bin" $HOME/.profile) ]]; then
   confirm=""
   while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
@@ -129,23 +84,19 @@ if [[ ! $(grep ".local/bin" $HOME/.profile) ]]; then
   fi
 fi
 
-if [[ "$OSTYPE" =~ ^darwin ]]; then
-  darwin_python_bin="Library/Python/$default_python_version/bin"
-  if [[ ! $PATH =~ "$HOME/$darwin_python_bin" ]]; then
-    echo "Adding $HOME/$darwin_python_bin to PATH"
-    export PATH=$PATH:$HOME/$darwin_python_bin
-  fi
-  # Check to see if .profile has this, but it wasn't source for some reason, such as maybe
-  # $HOME/.bash_profile didn't reference it
-  if [[ ! $(grep "$darwin_python_bin" $HOME/.profile) ]]; then
-    confirm=""
-    while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-      read -p "Add $darwin_python_bin to PATH in $HOME/.profile? (y/n) " confirm
-    done
-
-    if [[ $confirm == "y" ]]; then
-      echo "export PATH=\$PATH:\$HOME/$darwin_python_bin" >> $HOME/.profile
-    fi
+if [[ ! $(grep "pyenv" $HOME/.profile) ]]; then
+  confirm=""
+  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
+    read -p "Add pyenv to $HOME/.profile? (y/n) " confirm
+  done
+  
+  if [[ $confirm == "y" ]]; then
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
+    echo 'eval "$(pyenv init -)"' >> ~/.profile
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
+    echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
   fi
 fi
 
@@ -207,6 +158,50 @@ if [[ ! "$HOME/.bashrc" -ef "$HOME/dotfiles/.bashrc" ]]; then
   fi
 fi
 
+echo "Installing pip modules"
+pip_modules=(
+  fancycompleter
+  powerline-status
+  powerline-shell
+)
+
+for pm in ${pip_modules[@]}; do
+  confirm=""
+  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
+    read -p "Install python module $pm? (y/n) " confirm
+  done
+  if [[ $confirm == "y" ]]; then
+    echo "Installing $pm"
+    pip3 install --user $pm
+  fi
+done
+
+echo "Installing go modules"
+go_modules=(
+  github.com/justjanne/powerline-go@latest
+)
+
+for gm in ${go_modules[@]}; do
+  confirm=""
+  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
+    read -p "Install go module $gm? (y/n) " confirm
+  done
+  if [[ $confirm == "y" ]]; then
+    echo "Installing $gm"
+     GOPROXY=direct go install $gm
+  fi
+done
+
+echo "Note: fonts must be manually installed on host computer as well."
+echo "See: https://github.com/powerline/fonts"
+fonts_path="/tmp/$USER/fonts"
+mkdir -p "$fonts_path"
+git clone https://github.com/powerline/fonts.git "$fonts_path" --depth=1
+pushd "$fonts_path" > /dev/null
+./install.sh
+popd > /dev/null
+rm -rf "/tmp/$USER/fonts"
+
 # Set up vim
 echo "Creating .vim/tmp"
 mkdir -p $HOME/.vim/tmp
@@ -225,6 +220,11 @@ if [[ ! "$HOME/.vimrc" -ef "$HOME/dotfiles/.vimrc" ]]; then
   rm -f .vimrc
   ln -s dotfiles/.vimrc
   popd > /dev/null
+fi
+
+
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+  brew install vim # For youcompleteme python support
 fi
 
 echo "Installing vim plugins"

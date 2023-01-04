@@ -15,4 +15,7 @@ export NVM_DIR="$HOME/.nvm"
 
 # Set up Go environment
 [ -d "$GOPATH" ] && export PATH="$PATH:$GOPATH/bin"
-. "$HOME/.cargo/env"
+
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"

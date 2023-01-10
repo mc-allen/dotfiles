@@ -20,6 +20,9 @@ if [[ $confirm != "y" ]]; then
   exit 1
 fi
 
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+
 if [[ "$OSTYPE" =~ ^darwin ]]; then
   if [[ ! -x $(which brew) ]]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
@@ -33,16 +36,24 @@ elif [[ "$OSTYPE" =~ ^linux ]]; then
   if [[ ! -x $(which pyenv) ]]; then
     curl https://pyenv.run | bash # pyenv
   fi
-  sudo add-apt-repository ppa:longsleep/golang-backports # go
   sudo apt-get update
-  sudo apt-get install golang-go # go
+  sudo apt-get install build-essential gdb lcov pkg-config \
+      libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev \
+      libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev \
+      lzma lzma-dev tk-dev uuid-dev zlib1g-dev tmux
+  sudo add-apt-repository ppa:longsleep/golang-backports # go
+  sudo apt-get update && sudo apt-get install golang-go # go
 else
   echo "$OSTYPE is not darwin or linux."
   exit 1
 fi
 
 echo "Installing python"
-env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install
+eval "$(pyenv init -)"
+_PYTHON_VERSION=3.11.1
+pyenv uninstall -f $_PYTHON_VERSION
+env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install -f $_PYTHON_VERSION
+pyenv global $_PYTHON_VERSION
 
 # Install .profile
 echo "Checking .profile"
@@ -172,7 +183,7 @@ for pm in ${pip_modules[@]}; do
   done
   if [[ $confirm == "y" ]]; then
     echo "Installing $pm"
-    pip3 install --user $pm
+    pip3 install --user --use-pep517 $pm
   fi
 done
 

@@ -59,6 +59,8 @@ if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
   PROMPT_COMMAND="_update_ps1"
 fi
 
+[ -f ~/.git-completion.bash ] && source ~/.git-completion.bash
+
 [ -r "$HOME/.bashrc.local" ] && source $HOME/.bashrc.local
 
 export NVM_DIR="$HOME/.nvm"

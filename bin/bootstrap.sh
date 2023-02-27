@@ -276,6 +276,15 @@ if [[ ! "$HOME/.gitmessage" -ef "$HOME/dotfiles/.gitmessage" ]]; then
   popd > /dev/null
 fi
 
+echo "Checking for .git-completion.bash"
+if [[ ! "$HOME/.git-completion.bash" -ef "$HOME/dotfiles/.git-completion.bash" ]]; then
+  echo "Linking .git-completion.bash"
+  pushd $HOME > /dev/null
+  rm -f .git-completion.bash
+  ln -s dotfiles/.git-completion.bash
+  popd > /dev/null
+fi
+
 echo "Checking for .gitconfig.local"
 if [[ ! -r $HOME/.gitconfig.local ]]; then
   echo "Creating .gitconfig.local"

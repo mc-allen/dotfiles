@@ -1,5 +1,11 @@
+if [[ "$OSTYPE" =~ ^darwin && -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    export GOPATH="$HOME/go"
+else
+    export GOPATH="$HOME/.go"
+fi
+
 export PYTHONSTARTUP="$HOME/.pyrc"
-export GOPATH="$HOME/.go"
 export NVM_DIR="$HOME/.nvm"
 
 [ -r "$HOME/.profile" ] && source "$HOME/.profile"
@@ -19,3 +25,5 @@ export NVM_DIR="$HOME/.nvm"
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+[ -f "$HOME/.zprofile.local" ] && source "$HOME/.zprofile.local"

@@ -84,7 +84,7 @@
   "Sync Title" : false,
   "Prompt Before Closing 2" : false,
   "BM Growl" : false,
-  "Command" : "\/bin\/bash",
+  "Command" : "\/bin\/zsh",
   "Description" : "Default",
   "Disable Window Resizing" : true,
   "Mouse Reporting" : true,

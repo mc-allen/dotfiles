@@ -1,4 +1,4 @@
-# .bashrc
+# .zshrc
 
 function encrypt() {
   fname="$1"
@@ -52,22 +52,46 @@ alias mc='meson compile'
 alias mi='meson install'
 alias gp='git pull --rebase'
 
+function powerline_precmd() {
+    PS1="$($GOPATH/bin/powerline-go -error $? -jobs ${${(%):%j}:-0})"
+
+    # Uncomment the following line to automatically clear errors after showing
+    # them once. This not only clears the error for powerline-go, but also for
+    # everything else you run in that shell. Don't enable this if you're not
+    # sure this is what you want.
+
+    #set "?"
+}
+
+function install_powerline_precmd() {
+  for s in "${precmd_functions[@]}"; do
+    if [ "$s" = "powerline_precmd" ]; then
+      return
+    fi
+  done
+  precmd_functions+=(powerline_precmd)
+}
+
 if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
-  function _update_ps1() {
-      PS1="$($GOPATH/bin/powerline-go -modules='aws,venv,user,ssh,cwd,perms,git,jobs,exit,root' -cwd-max-depth=3 -error $?)"
-  }
-  PROMPT_COMMAND="_update_ps1"
+    install_powerline_precmd
 fi
 
-[ -f ~/.git-completion.bash ] && source ~/.git-completion.bash
+if [[ -f "$HOME/.git-completion.zsh" ]]; then
+    zstyle ':completion:*:*:git:*' script $HOME/dotfiles/git-completion.bash
+    fpath=($HOME/.dotfiles $fpath)
 
-[ -r "$HOME/.bashrc.local" ] && source $HOME/.bashrc.local
+    autoload -Uz compinit && compinit
+fi
+
+[ -r "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-[ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env" # Load cargo bash completiont
+[ -s "$NVM_DIR/zsh_completion" ] && \. "$NVM_DIR/zsh_completion"  # This loads nvm zsh_completion
+[ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env" # Load cargo zsh completion
 
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+export TERM='xterm-256color'

@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/zsh -e
 
 if [[ ! -r $HOME/dotfiles/.git ]]; then
   echo "Please clone dotfiles repo to $HOME/"
@@ -6,17 +6,14 @@ if [[ ! -r $HOME/dotfiles/.git ]]; then
 fi
 
 echo "Note that this will overwrite the following files, if they exist:"
-echo "  $HOME/.bashrc"
-echo "  $HOME/.bash_profile"
+echo "  $HOME/.zshrc"
+echo "  $HOME/.zprofile"
 echo "  $HOME/.gitconfig"
 echo "  $HOME/.pyrc"
 echo "  $HOME/.tmux.conf"
 echo "  $HOME/.vimrc"
 
-while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-  read -p "Continue? (y/n) " confirm
-done
-if [[ $confirm != "y" ]]; then
+if ! read -q "?Continue? (y/n) "; then
   exit 1
 fi
 
@@ -25,16 +22,16 @@ command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 
 if [[ "$OSTYPE" =~ ^darwin ]]; then
   if [[ ! -x $(which brew) ]]; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+    /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   fi
-  if [[ ! -x $(which pip3) ]]; then
+  if [[ ! -x $(which pyenv) ]]; then
     brew install pyenv # pyenv
   fi
   brew install go # For powerline
   brew install --cask cmake # For YouCompleteMe
 elif [[ "$OSTYPE" =~ ^linux ]]; then
   if [[ ! -x $(which pyenv) ]]; then
-    curl https://pyenv.run | bash # pyenv
+    curl https://pyenv.run | zsh # pyenv
   fi
   sudo apt-get update
   sudo apt-get install build-essential gdb lcov pkg-config \
@@ -48,12 +45,14 @@ else
   exit 1
 fi
 
-echo "Installing python"
-eval "$(pyenv init -)"
-_PYTHON_VERSION=3.11.1
-pyenv uninstall -f $_PYTHON_VERSION
-env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install -f $_PYTHON_VERSION
-pyenv global $_PYTHON_VERSION
+if read -q "?Install python? (y/n) "; then
+    echo "Installing python"
+    eval "$(pyenv init -)"
+    _PYTHON_VERSION=3.12.1
+    pyenv uninstall -f $_PYTHON_VERSION
+    env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install -f $_PYTHON_VERSION
+    pyenv global $_PYTHON_VERSION
+fi
 
 # Install .profile
 echo "Checking .profile"
@@ -61,17 +60,13 @@ if [[ ! -r $HOME/.profile ]]; then
   touch $HOME/.profile
 fi
 
-# Install .bash_profile
-if [[ ! "$HOME/.bashrc" -ef "$HOME/dotfiles/.bashrc" ]]; then
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Overwrite $HOME/.bash_profile? (y/n) " confirm
-  done
-  if [[ $confirm == "y" ]]; then
-    echo "Overwriting $HOME/.bash_profile"
+# Install .zprofile
+if cmp --silent -- "$HOME/.zshrc" "$HOME/dotfiles/.zshrc"; then
+  if read -q "?Overwrite $HOME/.zprofile? (y/n) "; then
+    echo "Overwriting $HOME/.zprofile"
     pushd $HOME > /dev/null
-    rm -f .bash_profile
-    ln -s dotfiles/.bash_profile
+    rm -f .zprofile
+    ln -s dotfiles/.zprofile
     popd > /dev/null
   fi
 fi
@@ -85,46 +80,31 @@ if [[ ! $PATH =~ "$HOME/.local/bin" ]]; then
 fi
 
 if [[ ! $(grep ".local/bin" $HOME/.profile) ]]; then
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Add $HOME/.local/bin to PATH in $HOME/.profile? (y/n) " confirm
-  done
-
-  if [[ $confirm == "y" ]]; then
+  if read -q "?Add $HOME/.local/bin to PATH in $HOME/.profile? (y/n) "; then
     echo "export PATH=\$PATH:\$HOME/.local/bin" >> $HOME/.profile
   fi
 fi
 
 if [[ ! $(grep "pyenv" $HOME/.profile) ]]; then
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Add pyenv to $HOME/.profile? (y/n) " confirm
-  done
-  
-  if [[ $confirm == "y" ]]; then
+  if read -q "?Add pyenv to $HOME/.profile? (y/n) "; then
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
     echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
     echo 'eval "$(pyenv init -)"' >> ~/.profile
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
-    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
-    echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zprofile
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zprofile
+    echo 'eval "$(pyenv init -)"' >> ~/.zprofile
   fi
 fi
 
-if [[ ! $(grep ".bashrc" $HOME/.profile) ]]; then
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Add sourcing .bashrc in $HOME/.profile? (y/n) " confirm
-  done
-
-  if [[ $confirm == "y" ]]; then
-    echo "Adding source $HOME/.bashrc to $HOME/.bash_profile"
+if [[ ! $(grep ".zshrc" $HOME/.profile) ]]; then
+  if read -q "?Add sourcing .zshrc in $HOME/.profile? (y/n) "; then
+    echo "Adding source $HOME/.zshrc to $HOME/.zprofile"
     contents=$(cat <<-EOF
 
 if [ -n "\$BASH_VERSION" ]; then
-  # include .bashrc if it exists
-  if [ -r "\$HOME/.bashrc" ]; then
-    source "\$HOME/.bashrc"
+  # include .zshrc if it exists
+  if [ -r "\$HOME/.zshrc" ]; then
+    source "\$HOME/.zshrc"
   fi
 fi
 EOF
@@ -133,38 +113,28 @@ EOF
   fi
 fi
 
-# Install .bashrc
-echo "Checking .bashrc.local"
-if [[ ! -r $HOME/.bashrc.local ]]; then
-  if [[ -r $HOME/.bashrc ]]; then
-    confirm=""
-    while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-      read -p "Move current $HOME/.bashrc to $HOME/.bashrc.local? (y/n) " confirm
-    done
-
-    if [[ $confirm == "y" ]]; then
-      echo "Moving $HOME/.bashrc to $HOME/.bashrc.local"
-      mv $HOME/.bashrc $HOME/.bashrc.local
+# Install .zshrc
+echo "Checking .zshrc.local"
+if [[ ! -r $HOME/.zshrc.local ]]; then
+  if [[ -r $HOME/.zshrc ]]; then
+    if read -q "?Move current $HOME/.zshrc to $HOME/.zshrc.local? (y/n) "; then
+      echo "Moving $HOME/.zshrc to $HOME/.zshrc.local"
+      mv $HOME/.zshrc $HOME/.zshrc.local
     fi
   fi
-  # Check to see if a .bashrc.local was created by the previous check; if not, create it.
-  if [[ ! -r $HOME/.bashrc.local ]]; then
-    echo "Creating empty $HOME/.bashrc.local"
-    touch $HOME/.bashrc.local
+  # Check to see if a .zshrc.local was created by the previous check; if not, create it.
+  if [[ ! -r $HOME/.zshrc.local ]]; then
+    echo "Creating empty $HOME/.zshrc.local"
+    touch $HOME/.zshrc.local
   fi
 fi
 
-echo "Checking .bashrc"
-if [[ ! "$HOME/.bashrc" -ef "$HOME/dotfiles/.bashrc" ]]; then
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Overwrite $HOME/.bashrc? (y/n) " confirm
-  done
-
-  if [[ $confirm == "y" ]]; then
+echo "Checking .zshrc"
+if [[ ! "$HOME/.zshrc" -ef "$HOME/dotfiles/.zshrc" ]]; then
+  if read -q "?Overwrite $HOME/.zshrc? (y/n) "; then
     pushd $HOME > /dev/null
-    rm -f .bashrc
-    ln -s dotfiles/.bashrc
+    rm -f .zshrc
+    ln -s dotfiles/.zshrc
     popd > /dev/null
   fi
 fi
@@ -177,12 +147,7 @@ pip_modules=(
 )
 
 for pm in ${pip_modules[@]}; do
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Install python module $pm? (y/n) " confirm
-  done
-  if [[ $confirm == "y" ]]; then
-    echo "Installing $pm"
+  if read -q "?Install python module $pm? (y/n) "; then
     pip3 install --user --use-pep517 $pm
   fi
 done
@@ -193,13 +158,9 @@ go_modules=(
 )
 
 for gm in ${go_modules[@]}; do
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Install go module $gm? (y/n) " confirm
-  done
-  if [[ $confirm == "y" ]]; then
+  if read -q "?Install go module $gm? (y/n) "; then
     echo "Installing $gm"
-     GOPROXY=direct go install $gm
+    GOPROXY=direct go install $gm
   fi
 done
 
@@ -242,12 +203,7 @@ echo "Installing vim plugins"
 vim +PluginUpdate +PluginInstall +qall
 
 if [[ -r "$HOME/.vim/bundle/YouCompleteMe/install.py" ]]; then
-  confirm=""
-  while [[ ! $confirm == "y" && ! $confirm == "n" ]]; do
-    read -p "Install YouCompleteMe? (y/n) " confirm
-  done
-
-  if [[ $confirm == "y" ]]; then
+  if read -q "?Install YouCompleteMe? (y/n) "; then
     echo "Installing YouCompleteMe"
     if [[ "$OSTYPE" =~ ^darwin ]]; then
       brew install ctags
@@ -276,20 +232,11 @@ if [[ ! "$HOME/.gitmessage" -ef "$HOME/dotfiles/.gitmessage" ]]; then
   popd > /dev/null
 fi
 
-echo "Checking for .git-completion.bash"
-if [[ ! "$HOME/.git-completion.bash" -ef "$HOME/dotfiles/.git-completion.bash" ]]; then
-  echo "Linking .git-completion.bash"
-  pushd $HOME > /dev/null
-  rm -f .git-completion.bash
-  ln -s dotfiles/.git-completion.bash
-  popd > /dev/null
-fi
-
 echo "Checking for .gitconfig.local"
 if [[ ! -r $HOME/.gitconfig.local ]]; then
   echo "Creating .gitconfig.local"
-  read -p "Git username? " git_user
-  read -p "Git email? " git_email
+  read "git_user?Git username? "
+  read "git_email?Git email? "
   contents=$(cat <<-EOF
 [user]
   name = $git_user
@@ -318,8 +265,5 @@ if [[ ! "$HOME/.pyrc" -ef "$HOME/.pyrc" ]]; then
 fi
 
 echo "Complete."
-echo "Add .bashrc settings to .bashrc.local"
-echo "Add .gitconfig settings to .gitconfig.local"
-echo "Add .bash_profile/.profile settings to .profile"
 
 exit 0

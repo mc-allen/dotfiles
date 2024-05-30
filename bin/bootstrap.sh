@@ -22,7 +22,7 @@ command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 
 if [[ "$OSTYPE" =~ ^darwin ]]; then
   if [[ ! -x $(which brew) ]]; then
-    /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   fi
   if [[ ! -x $(which pyenv) ]]; then
     brew install pyenv # pyenv

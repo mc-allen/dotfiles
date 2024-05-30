@@ -1,5 +1,7 @@
 # .zshrc
 
+[ -r "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
 function encrypt() {
   fname="$1"
   openssl aes-256-cbc -base64 -e -salt -in "$fname" -out "$(basename ${fname%.*})"
@@ -72,7 +74,7 @@ function install_powerline_precmd() {
   precmd_functions+=(powerline_precmd)
 }
 
-if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
+if [ -f "$GOPATH/bin/powerline-go" ]; then
     install_powerline_precmd
 fi
 
@@ -82,8 +84,6 @@ if [[ -f "$HOME/.git-completion.zsh" ]]; then
 
     autoload -Uz compinit && compinit
 fi
-
-[ -r "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

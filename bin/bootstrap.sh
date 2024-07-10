@@ -29,7 +29,7 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
   fi
   brew install go # For powerline
   brew install --cask cmake # For YouCompleteMe
-  brew install nvim@0.10.0
+  brew install nvim
 elif [[ "$OSTYPE" =~ ^linux ]]; then
   if [[ ! -x $(which pyenv) ]]; then
     curl https://pyenv.run | zsh # pyenv
@@ -155,6 +155,7 @@ pip_modules=(
   fancycompleter
   powerline-status
   powerline-shell
+  pyright
 )
 
 for pm in ${pip_modules[@]}; do

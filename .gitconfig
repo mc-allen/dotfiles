@@ -3,15 +3,15 @@
 [commit]
   template = ~/.gitmessage
 [core]
-	editor = vim
+    editor = nvim
 [diff]
-	tool = vimdiff
+    tool = nvimdiff
 [difftool]
-    prompt = false
-[difftool "vimdiff"]
-	cmd = vim -f -d -c 'set ro' -c 'wincmd l' -c 'cd "$GIT_PREFIX"' "$LOCAL" "$REMOTE"
+    prompt = true
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [merge]
-	tool = vimdiff
+    tool = nvimdiff
 [mergetool]
     prompt = false
 [color]

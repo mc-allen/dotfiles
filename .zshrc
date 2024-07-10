@@ -1,5 +1,12 @@
 # .zshrc
 
+setopt autolist
+unsetopt menucomplete
+setopt noautomenu
+unsetopt nomatch
+
+export TERM='xterm-256color'
+
 [ -r "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
 function encrypt() {
@@ -55,7 +62,7 @@ alias mi='meson install'
 alias gp='git pull --rebase'
 
 function powerline_precmd() {
-    PS1="$($GOPATH/bin/powerline-go -error $? -jobs ${${(%):%j}:-0})"
+    PS1="$($GOPATH/bin/powerline-go -condensed -cwd-max-depth 1 -max-width 32 -error $? -jobs ${${(%):%j}:-0})"
 
     # Uncomment the following line to automatically clear errors after showing
     # them once. This not only clears the error for powerline-go, but also for
@@ -74,7 +81,7 @@ function install_powerline_precmd() {
   precmd_functions+=(powerline_precmd)
 }
 
-if [ -f "$GOPATH/bin/powerline-go" ]; then
+if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
     install_powerline_precmd
 fi
 
@@ -85,6 +92,14 @@ if [[ -f "$HOME/.git-completion.zsh" ]]; then
     autoload -Uz compinit && compinit
 fi
 
+export HISTFILE=$HOME/.zsh_history
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000000
+export HISTTIMEFORMAT="[%F %T] "
+setopt INC_APPEND_HISTORY
+setopt HIST_FIND_NO_DUPS
+setopt EXTENDED_HISTORY
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/zsh_completion" ] && \. "$NVM_DIR/zsh_completion"  # This loads nvm zsh_completion
@@ -93,5 +108,3 @@ export NVM_DIR="$HOME/.nvm"
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
-
-export TERM='xterm-256color'

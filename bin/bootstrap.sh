@@ -11,7 +11,7 @@ echo "  $HOME/.zprofile"
 echo "  $HOME/.gitconfig"
 echo "  $HOME/.pyrc"
 echo "  $HOME/.tmux.conf"
-echo "  $HOME/.vimrc"
+echo "  $HOME/.config/nvim/init.lua"
 
 if ! read -q "?Continue? (y/n) "; then
   exit 1
@@ -29,6 +29,7 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
   fi
   brew install go # For powerline
   brew install --cask cmake # For YouCompleteMe
+  brew install nvim@0.10.0
 elif [[ "$OSTYPE" =~ ^linux ]]; then
   if [[ ! -x $(which pyenv) ]]; then
     curl https://pyenv.run | zsh # pyenv
@@ -37,9 +38,19 @@ elif [[ "$OSTYPE" =~ ^linux ]]; then
   sudo apt-get install build-essential gdb lcov pkg-config \
       libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev \
       libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev \
-      lzma lzma-dev tk-dev uuid-dev zlib1g-dev tmux
+      lzma lzma-dev tk-dev uuid-dev zlib1g-dev tmux wget
   sudo add-apt-repository ppa:longsleep/golang-backports # go
   sudo apt-get update && sudo apt-get install golang-go # go
+  nvim_sha256="6a021e9465fe3d3375e28c3e94c1c2c4f7d1a5a67e4a78cf52d18d77b1471390  $HOME/.local/bin/nvim.appimage"
+  set +e
+  echo "$nvim_sha256" | sha256sum --check > /dev/null
+  nvim_ok=$?
+  set -e
+  if [ $nvim_ok -ne 0 ]; then
+    wget -O $HOME/.local/bin/nvim.appimage https://github.com/neovim/neovim/releases/download/v0.10.0/nvim.appimage
+    echo "$nvim_sha256" | sha256sum --check
+    chmod +x $HOME/.local/bin/nvim.appimage
+  fi
 else
   echo "$OSTYPE is not darwin or linux."
   exit 1
@@ -174,44 +185,17 @@ pushd "$fonts_path" > /dev/null
 popd > /dev/null
 rm -rf "/tmp/$USER/fonts"
 
-# Set up vim
+# Set up nvim
 echo "Creating .vim/tmp"
-mkdir -p $HOME/.vim/tmp
+mkdir -p $HOME/.config/nvim
 
-echo "Checking for Vundle"
-mkdir -p $HOME/.vim/bundle
-if [[ ! -r $HOME/.vim/bundle/Vundle.vim ]]; then
-  echo "Cloning Vundle"
-  git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
-fi
-
-echo "Checking for .vimrc"
-if [[ ! "$HOME/.vimrc" -ef "$HOME/dotfiles/.vimrc" ]]; then
-  echo "Linking .vimrc"
-  pushd $HOME > /dev/null
-  rm -f .vimrc
-  ln -s dotfiles/.vimrc
+echo "Checking for init.lua"
+if [[ ! "$HOME/.config/nvim/init.lua" -ef "$HOME/dotfiles/nvim/init.lua" ]]; then
+  echo "Linking init.lua"
+  pushd $HOME/.config/nvim > /dev/null
+  rm -f init.lua
+  ln -s $HOME/dotfiles/nvim/init.lua
   popd > /dev/null
-fi
-
-
-if [[ "$OSTYPE" =~ ^darwin ]]; then
-  brew install vim # For youcompleteme python support
-fi
-
-echo "Installing vim plugins"
-vim +PluginUpdate +PluginInstall +qall
-
-if [[ -r "$HOME/.vim/bundle/YouCompleteMe/install.py" ]]; then
-  if read -q "?Install YouCompleteMe? (y/n) "; then
-    echo "Installing YouCompleteMe"
-    if [[ "$OSTYPE" =~ ^darwin ]]; then
-      brew install ctags
-    elif [[ "$OSTYPE" =~ ^linux ]]; then
-      sudo apt install build-essential cmake vim-nox python3-dev
-    fi
-    $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer
-  fi
 fi
 
 echo "Checking for .gitconfig"

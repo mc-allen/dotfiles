@@ -196,6 +196,7 @@ if [[ ! "$HOME/.config/nvim/init.lua" -ef "$HOME/dotfiles/nvim/init.lua" ]]; the
   pushd $HOME/.config/nvim > /dev/null
   rm -f init.lua
   ln -s $HOME/dotfiles/nvim/init.lua
+  ln -s $HOME/dotfiles/nvim/stylua.toml
   popd > /dev/null
 fi
 

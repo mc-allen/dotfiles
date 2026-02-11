@@ -1,12 +1,7 @@
-<type>[optional scope]: <description>
-# types: build ci chore docs feat fix perf refactor revert style test
+[]
 
-# BREAKING CHANGE: include "!" after subject type and describe here
+**Description**
 
-Problem:
 
-Solution:
+**JIRA Ticket**
 
-Testing:
-
-Issue: 

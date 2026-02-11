@@ -27,7 +27,6 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
   if [[ ! -x $(which pyenv) ]]; then
     brew install pyenv # pyenv
   fi
-  brew install go # For powerline
   brew install --cask cmake # For YouCompleteMe
   brew install nvim
 elif [[ "$OSTYPE" =~ ^linux ]]; then
@@ -39,8 +38,6 @@ elif [[ "$OSTYPE" =~ ^linux ]]; then
       libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev \
       libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev \
       lzma lzma-dev tk-dev uuid-dev zlib1g-dev tmux wget
-  sudo add-apt-repository ppa:longsleep/golang-backports # go
-  sudo apt-get update && sudo apt-get install golang-go # go
   nvim_sha256="6a021e9465fe3d3375e28c3e94c1c2c4f7d1a5a67e4a78cf52d18d77b1471390  $HOME/.local/bin/nvim.appimage"
   set +e
   echo "$nvim_sha256" | sha256sum --check > /dev/null
@@ -150,6 +147,9 @@ if [[ ! "$HOME/.zshrc" -ef "$HOME/dotfiles/.zshrc" ]]; then
   fi
 fi
 
+echo "Installing powerlevel10k"
+git clone https://github.com/romkatv/powerlevel10k.git $USER/.local/share/
+
 echo "Installing pip modules"
 pip_modules=(
   fancycompleter
@@ -166,7 +166,6 @@ done
 
 echo "Installing go modules"
 go_modules=(
-  github.com/justjanne/powerline-go@latest
 )
 
 for gm in ${go_modules[@]}; do

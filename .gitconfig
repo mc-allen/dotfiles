@@ -3,26 +3,24 @@
 [commit]
   template = ~/.gitmessage
 [core]
-    editor = nvim
+    editor = nvim.appimage
 [diff]
     tool = nvimdiff
+    guitool = nvimdiff
 [difftool]
     prompt = true
 [difftool "nvimdiff"]
-    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+    cmd = "nvim.appimage -d -- \"$LOCAL\" \"$REMOTE\" || nvim -d -- \"$LOCAL\" \"$REMOTE\""
 [merge]
     tool = nvimdiff
 [mergetool]
     prompt = false
+    layout = "LOCAL,BASE,REMOTE / MERGED"
 [color]
     ui = auto
     diff = auto
-[branch]
-    autosetuprebase = always
 [push]
     default = current
-[rerere]
-    enabled = true
 [alias]
     s = status -uno
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative

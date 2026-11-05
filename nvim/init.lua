@@ -593,7 +593,20 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-        pyright = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                extraPaths = {
+                  './bazel-bin',
+                },
+                autoSearchPaths = false,
+                useLibraryCodeForTypes = false,
+                diagnosticMode = 'openFilesOnly',
+              },
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -636,33 +649,13 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
+      for server_name, server in pairs(servers) do
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+        vim.lsp.config(server_name, server)
+      end
 
-      require('lspconfig').pyright.setup {
-        settings = {
-          python = {
-            analysis = {
-              extraPaths = {
-                './bazel-bin',
-              },
-              autoSearchPaths = false,
-              useLibraryCodeForTypes = false,
-              diagnosticMode = 'openFilesOnly',
-            },
-          },
-        },
-      }
+      require('mason-lspconfig').setup()
+      vim.lsp.enable(vim.tbl_keys(servers))
     end,
   },
 
